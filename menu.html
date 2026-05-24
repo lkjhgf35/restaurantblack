@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Menu — Premium Restaurant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg:      hsl(30 20% 8%);
+      --fg:      hsl(36 30% 92%);
+      --card:    hsl(30 18% 11%);
+      --primary: hsl(24 70% 55%);
+      --muted:   hsl(36 15% 65%);
+      --border:  hsl(30 15% 20%);
+    }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--fg); font-family: 'Inter', system-ui, sans-serif; font-weight: 300; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    .container { max-width: 1400px; margin-inline: auto; padding-inline: 1.5rem; }
+    .divider { width: 4rem; height: 1px; background: hsl(24 70% 55% / 0.6); margin: 1.5rem auto; }
+
+    /* Header */
+    header { position: absolute; inset-block-start: 0; inset-inline: 0; z-index: 50; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; padding-block: 1.5rem; }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; letter-spacing: 0.08em; }
+    nav { display: flex; align-items: center; gap: 2.5rem; }
+    nav a { font-family: 'Bebas Neue', sans-serif; font-size: 0.875rem; letter-spacing: 0.12em; color: hsl(36 30% 92% / 0.8); transition: color .2s; }
+    nav a:hover, nav a.active { color: var(--primary); }
+    .social-row { display: flex; gap: 1rem; }
+    .social-row a { color: hsl(36 30% 92% / 0.6); transition: color .2s; }
+    .social-row a:hover { color: var(--primary); }
+    .hamburger { display: none; background: none; border: none; cursor: pointer; color: var(--fg); }
+    .mobile-nav { display: none; position: absolute; top: 100%; inset-inline: 0; background: hsl(30 20% 8% / 0.97); border-top: 1px solid var(--border); backdrop-filter: blur(8px); }
+    .mobile-nav.open { display: block; }
+    .mobile-nav nav { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1.5rem; }
+
+    /* Hero */
+    .page-hero { position: relative; height: 60vh; min-height: 400px; display: flex; align-items: flex-end; overflow: hidden; }
+    .page-hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, hsl(30 20% 8% / .55) 0%, hsl(30 20% 8% / .4) 50%, hsl(30 20% 8%) 100%); }
+    .page-hero-content { position: relative; width: 100%; padding-bottom: 4rem; text-align: center; }
+    .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 0.75rem; letter-spacing: 0.4em; color: var(--primary); margin-bottom: 1rem; }
+    .page-hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 400; }
+    .intro-text { color: hsl(36 30% 92% / 0.85); max-width: 40rem; margin: 0 auto; }
+
+    /* Menu sections */
+    .menu-body { padding-block: 5rem 7rem; }
+    .menu-section { max-width: 56rem; margin-inline: auto; margin-bottom: 5rem; }
+    .menu-section:last-child { margin-bottom: 0; }
+    .section-title-row { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 2.5rem; }
+    .section-title-row h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 400; white-space: nowrap; }
+    .title-rule { flex: 1; height: 1px; background: var(--border); }
+    .item { display: flex; gap: 1.5rem; align-items: baseline; margin-bottom: 2rem; }
+    .item-body { flex: 1; }
+    .item-name-row { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 0.25rem; }
+    .item-name { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400; }
+    .dots { flex: 1; border-bottom: 1px dashed hsl(30 15% 20% / 0.6); }
+    .item-price { font-family: 'Bebas Neue', sans-serif; color: var(--primary); font-size: 1.25rem; letter-spacing: 0.04em; white-space: nowrap; }
+    .item-desc { color: var(--muted); font-size: 0.875rem; line-height: 1.65; }
+
+    /* Footer */
+    footer { border-top: 1px solid var(--border); }
+    .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem; padding-block: 4rem; }
+    .footer-col h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400; margin-bottom: 0.75rem; }
+    .footer-col h4 { font-family: 'Bebas Neue', sans-serif; font-size: 0.75rem; letter-spacing: 0.15em; color: var(--primary); margin-bottom: 1rem; }
+    .footer-col p, .footer-col a { font-size: 0.875rem; color: var(--muted); display: block; margin-bottom: 0.25rem; transition: color .2s; }
+    .footer-col a:hover { color: var(--primary); }
+    .footer-hours-row { display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 0.25rem; }
+    .footer-hours-row span:first-child { color: var(--muted); }
+    .footer-social { display: flex; gap: 1rem; margin-top: 1.5rem; }
+    .footer-social a { color: var(--muted); transition: color .2s; }
+    .footer-social a:hover { color: var(--primary); }
+    .footer-bottom { border-top: 1px solid var(--border); display: flex; justify-content: space-between; padding-block: 1.5rem; font-size: 0.75rem; color: var(--muted); flex-wrap: wrap; gap: .5rem; }
+    .footer-bottom a { color: var(--muted); transition: color .2s; }
+    .footer-bottom a:hover { color: var(--primary); }
+
+    @media (max-width: 900px) {
+      .footer-grid { grid-template-columns: 1fr; }
+      nav, .social-row { display: none; }
+      .hamburger { display: block; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="header-inner">
+      <a href="index.html" class="logo">Premium Restaurant</a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="menu.html" class="active">Menu</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="social-row">
+        <a href="https://instagram.com" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a href="https://facebook.com" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a href="https://twitter.com" aria-label="Twitter"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.7 5.4 4.4 9 4.5-.5-2.4 1.3-5 3.7-5.5C17.4 3.7 19.4 4.3 22 4z"/></svg></a>
+      </div>
+      <button class="hamburger" onclick="document.querySelector('.mobile-nav').classList.toggle('open')">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav">
+    <div class="container">
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<!-- Page Hero -->
+<section class="page-hero">
+  <img src="https://images.unsplash.com/photo-1521390188846-e2a3a97453a0?w=1600&q=80" alt="Sandwiches on parchment" />
+  <div class="hero-overlay"></div>
+  <div class="container">
+    <div class="page-hero-content">
+      <p class="eyebrow">The Menu</p>
+      <h1>Built to Order</h1>
+      <div class="divider"></div>
+      <p class="intro-text">Slow-cooked meats, freshly baked bread, sauces made in-house every morning.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Menu Sections -->
+<main class="menu-body">
+  <div class="container">
+
+    <div class="menu-section">
+      <div class="section-title-row">
+        <h2>Signature Sandwiches</h2>
+        <div class="title-rule"></div>
+      </div>
+      <div class="item">
+        <div class="item-body">
+          <div class="item-name-row">
+            <span class="item-name">The King</span>
+            <div class="dots"></div>
+            <span class="item-price">$16</span>
+          </div>
+          <p class="item-desc">Slow-roasted pastrami, aged swiss, mustard, pickles, sourdough</p>
+        </div>
+      </div>
+      <div class="item">
+        <div class="item-body">
+          <div class="item-name-row">
+            <span class="item-name">Bannatyne Beef</span>
+            <div class="dots"></div>
+            <span class="item-price">$17</span>
+          </div>
+          <p class="item-desc">Braised short rib, caramelized onion, horseradish aioli, ciabatta</p>
+        </div>
+      </div>
+      <div class="item">
+        <div class="item-body">
+          <div class="item-name-row">
+            <span class="item-name">Smoked Turkey Club</span>
+            <div class="dots"></div>
+            <span class="item-price">$15</span>
+          </div>
+          <p class="item-desc">House-smoked turkey, bacon, avocado, herb mayo, multigrain</p>
+        </div>
+      </div>
+      <div class="item">
+        <div class="item-body">
+          <div class="item-name-row">
+            <span class="item-name">The Cubano</span>
+            <div class="dots"></div>
+            <span class="item-price">$16</span>
+          </div>
+          <p class="item-desc">Roast pork, ham, swiss, pickle, mojo mustard, pressed</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-section">
+      <div class="section-title-row">
+        <h2>Garden</h2>
+        <div class="title-rule"></div>
+      </div>
+      <div class="item">
+        <div class="item-body">
+          <div class="item-name-row">
+            <span class="item-name">Roasted Vegetable</span>
+            <div class="dots"></div>
+            <span class="item-price">$13</span>
+          </div>
+          <p class="item-desc">Eggplant, zucchini, peppers, basil pesto, focaccia</p>
+        </div>
+      </div>
+      <div class="item">
+        <div class="item-body">
+          <div class="item-name-row">
+            <span class="item-name">Heirloom Caprese</span>
+            <div class="dots"></div>
+            <span class="item-price">$13</span>
+          </div>
+          <p class="item-desc">Tomato, fresh mozzarella, basil, balsamic, sourdough</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-section">
+      <div class="section-title-row">
+        <h2>Sides &amp; Sweets</h2>
+        <div class="title-rule"></div>
+      </div>
+      <div class="item">
+        <div class="item-body">
+          <div class="item-name-row">
+            <span class="item-name">House Pickles</span>
+            <div class="dots"></div>
+            <span class="item-price">$5</span>
+          </div>
+          <p class="item-desc">Brined daily, dill &amp; garlic</p>
+        </div>
+      </div>
+      <div class="item">
+        <div class="item-body">
+          <div class="item-name-row">
+            <span class="item-name">Salted Caramel Brownie</span>
+            <div class="dots"></div>
+            <span class="item-price">$6</span>
+          </div>
+          <p class="item-desc">Dense, fudgy, finished with flake salt</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3>Premium Restaurant</h3>
+        <p>The Sandwich Shop on the Corner</p>
+      </div>
+      <div class="footer-col">
+        <h4>Visit</h4>
+        <p>100 street blvd</p>
+        <a href="tel:000000000">000-000-000</a>
+        <a href="mailto:lorem@email.com">lorem@email.com</a>
+      </div>
+      <div class="footer-col">
+        <h4>Hours</h4>
+        <div class="footer-hours-row"><span>Monday — Friday</span><span>11AM — 4PM</span></div>
+        <div class="footer-hours-row"><span>Saturday — Sunday</span><span>Closed</span></div>
+        <div class="footer-social">
+          <a href="https://instagram.com" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          <a href="https://facebook.com" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="https://twitter.com" aria-label="Twitter"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.7 5.4 4.4 9 4.5-.5-2.4 1.3-5 3.7-5.5C17.4 3.7 19.4 4.3 22 4z"/></svg></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Premium Restaurant. All rights reserved.</span>
+      <a href="blog.html">Blog</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

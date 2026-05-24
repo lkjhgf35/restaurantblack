@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Premium Restaurant — The Sandwich Shop on the Corner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        hsl(30 20% 8%);
+      --fg:        hsl(36 30% 92%);
+      --card:      hsl(30 18% 11%);
+      --primary:   hsl(24 70% 55%);
+      --muted:     hsl(36 15% 65%);
+      --border:    hsl(30 15% 20%);
+      --radius:    0.25rem;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: 'Inter', system-ui, sans-serif;
+      font-weight: 300;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Typography ── */
+    .display { font-family: 'Cormorant Garamond', serif; font-weight: 400; letter-spacing: -0.01em; }
+    .caps    { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.06em; }
+
+    /* ── Utilities ── */
+    .container { max-width: 1400px; margin-inline: auto; padding-inline: 1.5rem; }
+    .divider   { width: 4rem; height: 1px; background: hsl(24 70% 55% / 0.6); margin: 1.5rem auto; }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ── Header ── */
+    header {
+      position: absolute;
+      inset-block-start: 0; inset-inline: 0;
+      z-index: 50;
+    }
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-block: 1.5rem;
+    }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; letter-spacing: 0.08em; }
+    nav { display: flex; align-items: center; gap: 2.5rem; }
+    nav a {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.875rem;
+      letter-spacing: 0.12em;
+      color: hsl(36 30% 92% / 0.8);
+      transition: color 0.2s;
+    }
+    nav a:hover, nav a.active { color: var(--primary); }
+    .social-row { display: flex; align-items: center; gap: 1rem; }
+    .social-row a { color: hsl(36 30% 92% / 0.6); transition: color 0.2s; }
+    .social-row a:hover { color: var(--primary); }
+
+    /* hamburger */
+    .hamburger { display: none; background: none; border: none; cursor: pointer; color: var(--fg); }
+    .mobile-nav {
+      display: none;
+      position: absolute;
+      top: 100%;
+      inset-inline: 0;
+      background: hsl(30 20% 8% / 0.97);
+      border-top: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+    }
+    .mobile-nav.open { display: block; }
+    .mobile-nav nav { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1.5rem; }
+
+    /* ── Hero ── */
+    .hero {
+      position: relative;
+      height: 100svh;
+      min-height: 680px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      text-align: center;
+    }
+    .hero img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, hsl(30 20% 8% / .55) 0%, hsl(30 20% 8% / .4) 50%, hsl(30 20% 8%) 100%);
+    }
+    .vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 40%, hsl(30 20% 8% / .7) 100%);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      animation: fadeIn 1.2s ease-out forwards;
+    }
+    .hero-eyebrow {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.4em;
+      color: var(--primary);
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3rem, 9vw, 6rem);
+      font-weight: 400;
+      line-height: 1.05;
+      max-width: 900px;
+      text-wrap: balance;
+    }
+    .hero-sub {
+      color: hsl(36 30% 92% / 0.85);
+      font-size: 1.0625rem;
+      max-width: 38rem;
+      margin: 0 auto 2.5rem;
+    }
+    .btn-row { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 2rem;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.875rem;
+      letter-spacing: 0.12em;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+    .btn-primary { background: var(--primary); color: hsl(30 20% 8%); border: 1px solid var(--primary); }
+    .btn-primary:hover { background: hsl(24 70% 62%); border-color: hsl(24 70% 62%); }
+    .btn-outline { background: transparent; color: var(--fg); border: 1px solid hsl(36 30% 92% / 0.4); }
+    .btn-outline:hover { background: hsl(36 30% 92% / 0.1); }
+    .btn-ghost { background: transparent; color: var(--fg); border: 1px solid transparent; }
+    .btn-ghost:hover { color: var(--primary); }
+    .btn-primary-outline { background: transparent; color: var(--primary); border: 1px solid var(--primary); }
+    .btn-primary-outline:hover { background: var(--primary); color: hsl(30 20% 8%); }
+
+    .hero-phone {
+      margin-top: 2.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: hsl(36 30% 92% / 0.8);
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.12em;
+      font-size: 0.875rem;
+      transition: color 0.2s;
+    }
+    .hero-phone:hover { color: var(--primary); }
+
+    /* ── Hours split ── */
+    .hours-section { padding-block: 7rem; }
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center; }
+    .hours-section img { width: 100%; aspect-ratio: 4/3; object-fit: cover; }
+    .section-eyebrow {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+    .section-heading { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; margin-bottom: 1.5rem; }
+    .hours-list { margin-bottom: 2rem; }
+    .hours-row {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+      padding-block: 0.5rem;
+      font-size: 0.875rem;
+    }
+    .hours-row span:first-child { color: var(--muted); }
+    .hours-row span:last-child  { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.08em; }
+
+    /* ── About parallax ── */
+    .about-section {
+      position: relative;
+      padding-block: 9rem;
+      overflow: hidden;
+      text-align: center;
+    }
+    .about-section img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.3;
+    }
+    .about-section::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: hsl(30 20% 8% / 0.7);
+    }
+    .about-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 48rem;
+      margin-inline: auto;
+    }
+    .about-inner h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 400; margin-bottom: 1.5rem; }
+    .about-inner p { font-size: 1.125rem; line-height: 1.75; color: hsl(36 30% 92% / 0.85); }
+
+    /* ── Menu cards ── */
+    .menu-section { padding-block: 7rem; }
+    .section-header { text-align: center; margin-bottom: 4rem; }
+    .section-header h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; }
+    .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+    .menu-card {
+      border: 1px solid var(--border);
+      padding: 2rem;
+      transition: border-color 0.2s;
+    }
+    .menu-card:hover { border-color: hsl(24 70% 55% / 0.6); }
+    .card-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.75rem; }
+    .card-top h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400; }
+    .price { font-family: 'Bebas Neue', sans-serif; color: var(--primary); font-size: 1.25rem; letter-spacing: 0.04em; }
+    .menu-card p { color: var(--muted); font-size: 0.875rem; line-height: 1.65; }
+    .center-mt { text-align: center; margin-top: 3rem; }
+
+    /* ── Blog grid ── */
+    .blog-section { padding-block: 7rem; background: hsl(30 18% 11% / 0.4); }
+    .post-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+    .post-card { display: block; }
+    .post-thumb { aspect-ratio: 4/3; overflow: hidden; margin-bottom: 1.25rem; }
+    .post-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s; }
+    .post-card:hover .post-thumb img { transform: scale(1.05); }
+    .post-date { font-family: 'Bebas Neue', sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; color: var(--primary); margin-bottom: 0.5rem; }
+    .post-card h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400; transition: color 0.2s; }
+    .post-card:hover h3 { color: var(--primary); }
+    .post-card p { color: var(--muted); font-size: 0.875rem; margin-top: 0.5rem; line-height: 1.65; }
+
+    /* ── Footer ── */
+    footer { border-top: 1px solid var(--border); margin-top: 6rem; }
+    .footer-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3rem; padding-block: 4rem; }
+    .footer-col h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400; margin-bottom: 0.75rem; }
+    .footer-col h4 { font-family: 'Bebas Neue', sans-serif; font-size: 0.75rem; letter-spacing: 0.15em; color: var(--primary); margin-bottom: 1rem; }
+    .footer-col p, .footer-col a { font-size: 0.875rem; color: var(--muted); display: block; margin-bottom: 0.25rem; }
+    .footer-col a { transition: color 0.2s; }
+    .footer-col a:hover { color: var(--primary); }
+    .footer-hours-row { display: flex; justify-content: space-between; font-size: 0.875rem; margin-bottom: 0.25rem; }
+    .footer-hours-row span:first-child { color: var(--muted); }
+    .footer-social { display: flex; gap: 1rem; margin-top: 1.5rem; }
+    .footer-social a { color: var(--muted); transition: color 0.2s; }
+    .footer-social a:hover { color: var(--primary); }
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-block: 1.5rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    /* ── Animations ── */
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+    /* ── Responsive ── */
+    @media (max-width: 900px) {
+      .two-col    { grid-template-columns: 1fr; }
+      .card-grid  { grid-template-columns: 1fr; }
+      .post-grid  { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      nav, .social-row { display: none; }
+      .hamburger  { display: block; }
+    }
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 2.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header>
+  <div class="container">
+    <div class="header-inner">
+      <a href="index.html" class="logo">Premium Restaurant</a>
+      <nav>
+        <a href="index.html" class="active">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="social-row">
+        <a href="https://instagram.com" aria-label="Instagram">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="https://facebook.com" aria-label="Facebook">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+        </a>
+        <a href="https://twitter.com" aria-label="Twitter">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.7 5.4 4.4 9 4.5-.5-2.4 1.3-5 3.7-5.5C17.4 3.7 19.4 4.3 22 4z"/></svg>
+        </a>
+      </div>
+      <button class="hamburger" aria-label="Toggle menu" onclick="document.querySelector('.mobile-nav').classList.toggle('open')">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav">
+    <div class="container">
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<!-- ── HERO ── -->
+<section class="hero">
+  <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=1920&q=80" alt="Gourmet sandwich" />
+  <div class="hero-overlay"></div>
+  <div class="vignette"></div>
+  <div class="hero-content container">
+    <p class="hero-eyebrow">The Sandwich Shop on the Corner</p>
+    <h1 class="display">Crafted with care,<br>served with pride</h1>
+    <div class="divider"></div>
+    <p class="hero-sub">City-wide delivery available for all catering orders</p>
+    <div class="btn-row">
+      <a href="#" class="btn btn-primary">Order Online</a>
+      <a href="contact.html" class="btn btn-outline">Catering Inquiries</a>
+    </div>
+    <a href="tel:000000000" class="hero-phone">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.41 2 2 0 0 1 3.59 1.26h3a2 2 0 0 1 2 1.72c.12.96.36 1.91.7 2.82a2 2 0 0 1-.45 2.11L7.91 8.9a16 16 0 0 0 6.11 6.11l.96-.96a2 2 0 0 1 2.11-.45c.9.34 1.86.58 2.82.7A2 2 0 0 1 22 16.92z"/></svg>
+      000-000-000
+    </a>
+  </div>
+</section>
+
+<!-- ── CURRENTLY OPEN ── -->
+<section class="hours-section">
+  <div class="container">
+    <div class="two-col">
+      <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?w=900&q=80" alt="Fresh bread on counter" loading="lazy" />
+      <div>
+        <p class="section-eyebrow">Currently Open For</p>
+        <h2 class="section-heading display">Dine-in, Online Ordering,<br>Takeout &amp; Catering</h2>
+        <div class="hours-list">
+          <div class="hours-row"><span>Monday — Friday</span><span>11AM — 4PM</span></div>
+          <div class="hours-row"><span>Saturday — Sunday</span><span>Closed</span></div>
+        </div>
+        <a href="#" class="btn btn-primary-outline">
+          Order Online
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section class="about-section">
+  <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=1600&q=70" alt="" loading="lazy" />
+  <div class="about-inner">
+    <p class="section-eyebrow" style="text-align:center;">Who We Are</p>
+    <h2 class="display">A Premium Sandwich Shop</h2>
+    <div class="divider"></div>
+    <p>We craft sandwiches the way they were meant to be — slow-roasted meats, freshly baked bread, house-made sauces. Every order is built by hand on the corner of King and Bannatyne, where the bread is warm and the line moves fast.</p>
+  </div>
+</section>
+
+<!-- ── FEATURED MENU ── -->
+<section class="menu-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">From the Counter</p>
+      <h2 class="display">Signature Sandwiches</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="card-grid">
+      <div class="menu-card">
+        <div class="card-top"><h3 class="display">The King</h3><span class="price">$16</span></div>
+        <p>Slow-roasted pastrami, aged swiss, mustard, pickles, sourdough</p>
+      </div>
+      <div class="menu-card">
+        <div class="card-top"><h3 class="display">Bannatyne Beef</h3><span class="price">$17</span></div>
+        <p>Braised short rib, caramelized onion, horseradish aioli, ciabatta</p>
+      </div>
+      <div class="menu-card">
+        <div class="card-top"><h3 class="display">Smoked Turkey Club</h3><span class="price">$15</span></div>
+        <p>House-smoked turkey, bacon, avocado, herb mayo, multigrain</p>
+      </div>
+    </div>
+    <div class="center-mt">
+      <a href="menu.html" class="btn btn-ghost">
+        View Full Menu
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── RECENT POSTS ── -->
+<section class="blog-section">
+  <div class="container">
+    <div class="section-header">
+      <p class="section-eyebrow">The Journal</p>
+      <h2 class="display">Stories from the Kitchen</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="post-grid">
+      <a href="post-pastrami.html" class="post-card">
+        <div class="post-thumb"><img src="https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=800&q=75" alt="Pastrami" loading="lazy" /></div>
+        <p class="post-date">March 12, 2025 · Chef David</p>
+        <h3 class="display">The Art of the Slow-Cooked Pastrami</h3>
+        <p>Why we brine for ten days, smoke for twelve hours, and never cut corners.</p>
+      </a>
+      <a href="blog.html" class="post-card">
+        <div class="post-thumb"><img src="https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=800&q=75" alt="Bread" loading="lazy" /></div>
+        <p class="post-date">February 28, 2025 · Chef David</p>
+        <h3 class="display">Bread, From Scratch, Every Morning</h3>
+        <p>Our baker is in at 4AM so your sandwich is on bread baked four hours ago.</p>
+      </a>
+      <a href="blog.html" class="post-card">
+        <div class="post-thumb"><img src="https://images.unsplash.com/photo-1555072956-7758afb20e8f?w=800&q=75" alt="Catering" loading="lazy" /></div>
+        <p class="post-date">February 10, 2025 · The Team</p>
+        <h3 class="display">Catering That Doesn't Feel Like Catering</h3>
+        <p>Trays of sandwiches that taste like they were just made — because they were.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3 class="display">Premium Restaurant</h3>
+        <p>The Sandwich Shop on the Corner</p>
+      </div>
+      <div class="footer-col">
+        <h4>Visit</h4>
+        <p>100 street blvd</p>
+        <a href="tel:000000000">000-000-000</a>
+        <a href="mailto:lorem@email.com">lorem@email.com</a>
+      </div>
+      <div class="footer-col">
+        <h4>Hours</h4>
+        <div class="footer-hours-row"><span>Monday — Friday</span><span>11AM — 4PM</span></div>
+        <div class="footer-hours-row"><span>Saturday — Sunday</span><span>Closed</span></div>
+        <div class="footer-social">
+          <a href="https://instagram.com" aria-label="Instagram">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          </a>
+          <a href="https://facebook.com" aria-label="Facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+          </a>
+          <a href="https://twitter.com" aria-label="Twitter">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.7 5.4 4.4 9 4.5-.5-2.4 1.3-5 3.7-5.5C17.4 3.7 19.4 4.3 22 4z"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Premium Restaurant. All rights reserved.</span>
+      <a href="blog.html" style="color:var(--muted);transition:color .2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--muted)'">Blog</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

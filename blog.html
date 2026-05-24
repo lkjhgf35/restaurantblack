@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Journal — Premium Restaurant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Bebas+Neue&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root { --bg: hsl(30 20% 8%); --fg: hsl(36 30% 92%); --primary: hsl(24 70% 55%); --muted: hsl(36 15% 65%); --border: hsl(30 15% 20%); }
+    html { scroll-behavior: smooth; }
+    body { background: var(--bg); color: var(--fg); font-family: 'Inter', system-ui, sans-serif; font-weight: 300; -webkit-font-smoothing: antialiased; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    .container { max-width: 1400px; margin-inline: auto; padding-inline: 1.5rem; }
+    .divider { width: 4rem; height: 1px; background: hsl(24 70% 55% / 0.6); margin: 1.5rem auto; }
+
+    header { position: absolute; inset-block-start: 0; inset-inline: 0; z-index: 50; }
+    .header-inner { display: flex; align-items: center; justify-content: space-between; padding-block: 1.5rem; }
+    .logo { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; letter-spacing: 0.08em; }
+    nav { display: flex; align-items: center; gap: 2.5rem; }
+    nav a { font-family: 'Bebas Neue', sans-serif; font-size: 0.875rem; letter-spacing: 0.12em; color: hsl(36 30% 92% / 0.8); transition: color .2s; }
+    nav a:hover, nav a.active { color: var(--primary); }
+    .social-row { display: flex; gap: 1rem; }
+    .social-row a { color: hsl(36 30% 92% / 0.6); transition: color .2s; }
+    .social-row a:hover { color: var(--primary); }
+    .hamburger { display: none; background: none; border: none; cursor: pointer; color: var(--fg); }
+    .mobile-nav { display: none; position: absolute; top: 100%; inset-inline: 0; background: hsl(30 20% 8% / 0.97); border-top: 1px solid var(--border); backdrop-filter: blur(8px); }
+    .mobile-nav.open { display: block; }
+    .mobile-nav nav { flex-direction: column; align-items: flex-start; gap: 1rem; padding: 1.5rem; }
+
+    .page-hero { position: relative; height: 55vh; min-height: 380px; display: flex; align-items: flex-end; overflow: hidden; }
+    .page-hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, hsl(30 20% 8% / .55) 0%, hsl(30 20% 8% / .4) 50%, hsl(30 20% 8%) 100%); }
+    .page-hero-content { position: relative; width: 100%; padding-bottom: 4rem; text-align: center; }
+    .eyebrow { font-family: 'Bebas Neue', sans-serif; font-size: 0.75rem; letter-spacing: 0.4em; color: var(--primary); margin-bottom: 1rem; }
+    .page-hero h1 { font-family: 'Cormorant Garamond', serif; font-size: clamp(3rem, 8vw, 5.5rem); font-weight: 400; }
+
+    .posts-section { padding-block: 5rem 7rem; }
+    .posts-list { max-width: 64rem; margin-inline: auto; display: grid; gap: 5rem; }
+
+    .post-row { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: center; }
+    .post-row.reverse .thumb { order: 2; }
+
+    .thumb { aspect-ratio: 4/3; overflow: hidden; }
+    .thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s; }
+    .post-link:hover .thumb img { transform: scale(1.05); }
+
+    .post-meta { font-family: 'Bebas Neue', sans-serif; font-size: 0.7rem; letter-spacing: 0.15em; color: var(--primary); margin-bottom: 0.75rem; }
+    .post-row h2 { font-family: 'Cormorant Garamond', serif; font-size: clamp(1.75rem, 3vw, 2.5rem); font-weight: 400; transition: color .2s; margin-bottom: 1rem; text-wrap: balance; }
+    .post-link:hover h2 { color: var(--primary); }
+    .post-excerpt { color: var(--muted); line-height: 1.7; }
+    .read-more { display: inline-block; margin-top: 1.5rem; font-family: 'Bebas Neue', sans-serif; font-size: 0.875rem; letter-spacing: 0.12em; color: var(--primary); border-bottom: 1px solid var(--primary); padding-bottom: 2px; }
+
+    footer { border-top: 1px solid var(--border); margin-top: 0; }
+    .footer-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 3rem; padding-block: 4rem; }
+    .footer-col h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; font-weight: 400; margin-bottom: 0.75rem; }
+    .footer-col h4 { font-family: 'Bebas Neue', sans-serif; font-size: 0.75rem; letter-spacing: .15em; color: var(--primary); margin-bottom: 1rem; }
+    .footer-col p, .footer-col a { font-size: .875rem; color: var(--muted); display: block; margin-bottom: .25rem; transition: color .2s; }
+    .footer-col a:hover { color: var(--primary); }
+    .footer-hours-row { display: flex; justify-content: space-between; font-size: .875rem; margin-bottom: .25rem; }
+    .footer-hours-row span:first-child { color: var(--muted); }
+    .footer-social { display: flex; gap: 1rem; margin-top: 1.5rem; }
+    .footer-social a { color: var(--muted); transition: color .2s; }
+    .footer-social a:hover { color: var(--primary); }
+    .footer-bottom { border-top: 1px solid var(--border); display: flex; justify-content: space-between; padding-block: 1.5rem; font-size: .75rem; color: var(--muted); flex-wrap: wrap; gap: .5rem; }
+    .footer-bottom a { color: var(--muted); transition: color .2s; }
+    .footer-bottom a:hover { color: var(--primary); }
+
+    @media (max-width: 900px) {
+      .post-row { grid-template-columns: 1fr; }
+      .post-row.reverse .thumb { order: 0; }
+      .footer-grid { grid-template-columns: 1fr; }
+      nav, .social-row { display: none; }
+      .hamburger { display: block; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="header-inner">
+      <a href="index.html" class="logo">Premium Restaurant</a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="blog.html" class="active">Blog</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="social-row">
+        <a href="https://instagram.com" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a href="https://facebook.com" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        <a href="https://twitter.com" aria-label="Twitter"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.7 5.4 4.4 9 4.5-.5-2.4 1.3-5 3.7-5.5C17.4 3.7 19.4 4.3 22 4z"/></svg></a>
+      </div>
+      <button class="hamburger" onclick="document.querySelector('.mobile-nav').classList.toggle('open')">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-nav">
+    <div class="container">
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="menu.html">Menu</a>
+        <a href="blog.html">Blog</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<section class="page-hero">
+  <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?w=1600&q=80" alt="Kitchen stories" />
+  <div class="hero-overlay"></div>
+  <div class="container">
+    <div class="page-hero-content">
+      <p class="eyebrow">Journal</p>
+      <h1>Stories from the Kitchen</h1>
+      <div class="divider"></div>
+    </div>
+  </div>
+</section>
+
+<main class="posts-section">
+  <div class="container">
+    <div class="posts-list">
+
+      <a href="post-pastrami.html" class="post-link" style="text-decoration:none;color:inherit;">
+        <div class="post-row">
+          <div class="thumb">
+            <img src="https://images.unsplash.com/photo-1529193591184-b1d58069ecdd?w=800&q=75" alt="Pastrami" loading="lazy" />
+          </div>
+          <div>
+            <p class="post-meta">March 12, 2025 · Chef David</p>
+            <h2>The Art of the Slow-Cooked Pastrami</h2>
+            <p class="post-excerpt">Why we brine for ten days, smoke for twelve hours, and never cut corners.</p>
+            <span class="read-more">Read Story</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="blog.html" class="post-link" style="text-decoration:none;color:inherit;">
+        <div class="post-row reverse">
+          <div class="thumb">
+            <img src="https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=800&q=75" alt="Bread baking" loading="lazy" />
+          </div>
+          <div>
+            <p class="post-meta">February 28, 2025 · Chef David</p>
+            <h2>Bread, From Scratch, Every Morning</h2>
+            <p class="post-excerpt">Our baker is in at 4AM so your sandwich is on bread baked four hours ago.</p>
+            <span class="read-more">Read Story</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="blog.html" class="post-link" style="text-decoration:none;color:inherit;">
+        <div class="post-row">
+          <div class="thumb">
+            <img src="https://images.unsplash.com/photo-1555072956-7758afb20e8f?w=800&q=75" alt="Catering" loading="lazy" />
+          </div>
+          <div>
+            <p class="post-meta">February 10, 2025 · The Team</p>
+            <h2>Catering That Doesn't Feel Like Catering</h2>
+            <p class="post-excerpt">Trays of sandwiches that taste like they were just made — because they were.</p>
+            <span class="read-more">Read Story</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h3>Premium Restaurant</h3>
+        <p>The Sandwich Shop on the Corner</p>
+      </div>
+      <div class="footer-col">
+        <h4>Visit</h4>
+        <p>100 street blvd</p>
+        <a href="tel:000000000">000-000-000</a>
+        <a href="mailto:lorem@email.com">lorem@email.com</a>
+      </div>
+      <div class="footer-col">
+        <h4>Hours</h4>
+        <div class="footer-hours-row"><span>Monday — Friday</span><span>11AM — 4PM</span></div>
+        <div class="footer-hours-row"><span>Saturday — Sunday</span><span>Closed</span></div>
+        <div class="footer-social">
+          <a href="https://instagram.com" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          <a href="https://facebook.com" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="https://twitter.com" aria-label="Twitter"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.7 5.4 4.4 9 4.5-.5-2.4 1.3-5 3.7-5.5C17.4 3.7 19.4 4.3 22 4z"/></svg></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 Premium Restaurant. All rights reserved.</span>
+      <a href="blog.html">Blog</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
